@@ -1,17 +1,29 @@
 
 (function(){
 
+/* ─── GameShell fallback (if shell.js didn't load) ─── */
+if(typeof GameShell==='undefined'){
+  window.GameShell={
+    beginRound:function(){},
+    audioOutput:function(ctx){var g=ctx.createGain();g.gain.value=0.25;g.connect(ctx.destination);return g;},
+    feedback:function(){}
+  };
+}
+
 /* ─── Sound Effects (Web Audio API) ─── */
 var sfxCtx;
 function getSfxCtx(){
-  if(!sfxCtx)sfxCtx=new (window.AudioContext||window.webkitAudioContext)();
-  sfxCtx.resume().catch(function(){});
-  return sfxCtx;
+  try{
+    if(!sfxCtx)sfxCtx=new (window.AudioContext||window.webkitAudioContext)();
+    sfxCtx.resume().catch(function(){});
+    return sfxCtx;
+  }catch(e){return null;}
 }
 
 function sfxCorrect(){
   try{
-    var ctx=getSfxCtx(),now=ctx.currentTime;
+    var ctx=getSfxCtx();if(!ctx)return;
+    var now=ctx.currentTime;
     var osc=ctx.createOscillator(),g=ctx.createGain();
     var out=GameShell.audioOutput(ctx);
     osc.type='sine';osc.frequency.setValueAtTime(880,now);
@@ -24,7 +36,8 @@ function sfxCorrect(){
 
 function sfxWrong(){
   try{
-    var ctx=getSfxCtx(),now=ctx.currentTime;
+    var ctx=getSfxCtx();if(!ctx)return;
+    var now=ctx.currentTime;
     var osc=ctx.createOscillator(),g=ctx.createGain();
     var out=GameShell.audioOutput(ctx);
     osc.type='sawtooth';osc.frequency.setValueAtTime(220,now);
@@ -37,7 +50,8 @@ function sfxWrong(){
 
 function sfxTimeout(){
   try{
-    var ctx=getSfxCtx(),now=ctx.currentTime;
+    var ctx=getSfxCtx();if(!ctx)return;
+    var now=ctx.currentTime;
     var osc=ctx.createOscillator(),g=ctx.createGain();
     var out=GameShell.audioOutput(ctx);
     osc.type='square';osc.frequency.setValueAtTime(300,now);
@@ -50,7 +64,8 @@ function sfxTimeout(){
 
 function sfxCombo(n){
   try{
-    var ctx=getSfxCtx(),now=ctx.currentTime;
+    var ctx=getSfxCtx();if(!ctx)return;
+    var now=ctx.currentTime;
     var out=GameShell.audioOutput(ctx);
     var notes=[660,880,1100];
     for(var i=0;i<notes.length;i++){
@@ -66,7 +81,8 @@ function sfxCombo(n){
 
 function sfxTimerWarn(){
   try{
-    var ctx=getSfxCtx(),now=ctx.currentTime;
+    var ctx=getSfxCtx();if(!ctx)return;
+    var now=ctx.currentTime;
     var osc=ctx.createOscillator(),g=ctx.createGain();
     var out=GameShell.audioOutput(ctx);
     osc.type='sine';osc.frequency.value=1000;
@@ -78,7 +94,8 @@ function sfxTimerWarn(){
 
 function sfxGameOver(){
   try{
-    var ctx=getSfxCtx(),now=ctx.currentTime;
+    var ctx=getSfxCtx();if(!ctx)return;
+    var now=ctx.currentTime;
     var out=GameShell.audioOutput(ctx);
     var notes=[880,660,440,330];
     for(var i=0;i<notes.length;i++){
@@ -94,7 +111,8 @@ function sfxGameOver(){
 
 function sfxHighScore(){
   try{
-    var ctx=getSfxCtx(),now=ctx.currentTime;
+    var ctx=getSfxCtx();if(!ctx)return;
+    var now=ctx.currentTime;
     var out=GameShell.audioOutput(ctx);
     var notes=[523,659,784,1047,784,1047];
     for(var i=0;i<notes.length;i++){
@@ -110,7 +128,8 @@ function sfxHighScore(){
 
 function sfxReverse(){
   try{
-    var ctx=getSfxCtx(),now=ctx.currentTime;
+    var ctx=getSfxCtx();if(!ctx)return;
+    var now=ctx.currentTime;
     var out=GameShell.audioOutput(ctx);
     var osc=ctx.createOscillator(),g=ctx.createGain();
     osc.type='triangle';osc.frequency.setValueAtTime(440,now);
@@ -195,16 +214,15 @@ for(var d=0;d<diffBtns.length;d++){
 }
 
 function startGame(){
-  GameShell.beginRound();
+  try{GameShell.beginRound();}catch(e){}
   var cfg=DIFF[currentDiff];
   totalRounds=cfg.totalRounds;
   COLORS=cfg.extraColors?COLORS_BASE.concat(COLORS_HARD):COLORS_BASE.slice();
   roundIdx=0;score=0;combo=0;maxCombo=0;correct=0;wrong=0;busy=false;
   getEl('sc').textContent='0';
-  getEl('totalR').textContent=totalRounds;
+  var totalEl=getEl('totalR');if(totalEl)totalEl.textContent=totalRounds;
   var dl=getEl('diffLabel');
-  dl.textContent=cfg.label;
-  dl.className='diff-label '+currentDiff;
+  if(dl){dl.textContent=cfg.label;dl.className='diff-label '+currentDiff;}
   showScreen('playScreen');
   nextRound();
 }
@@ -224,13 +242,11 @@ function nextRound(){
   tc.classList.remove('reverse','shake');
 
   if(isReverse){
-    rtEl.textContent='⚡ 文字の色名を読め！';
-    rtEl.className='round-type reverse';
+    if(rtEl){rtEl.textContent='⚡ 文字の色名を読め！';rtEl.className='round-type reverse';}
     sfxReverse();
     tc.classList.add('reverse');
   }else{
-    rtEl.textContent='';
-    rtEl.className='round-type';
+    if(rtEl){rtEl.textContent='';rtEl.className='round-type';}
   }
 
   // Pick target color
@@ -244,7 +260,6 @@ function nextRound(){
     do{fakeColorIdx=Math.floor(Math.random()*COLORS.length);}while(fakeColorIdx===targetIdx);
     tc.style.background=COLORS[fakeColorIdx].color;
     tc.textContent=target.name;
-    // The correct answer is still targetIdx (the NAME shown)
   }else{
     // Normal: show target color
     tc.style.background=target.color;
