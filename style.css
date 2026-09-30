@@ -1,0 +1,50 @@
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+body{background:linear-gradient(135deg,#F3E5F5,#E8EAF6);display:flex;justify-content:center;align-items:center;height:100vh;height:100dvh;overflow:hidden;font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif}
+#g{width:100%;max-width:420px;padding:16px;text-align:center;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.screen{display:none;flex-direction:column;align-items:center;width:100%}
+.screen.active{display:flex}
+h1{font-size:22px;color:#7B1FA2;margin:6px 0}
+.btn{background:#9C27B0;color:#fff;border:none;padding:12px 32px;border-radius:14px;font-size:18px;font-family:inherit;cursor:pointer;margin:10px;-webkit-appearance:none}
+.btn:active{background:#7B1FA2;transform:scale(0.95)}
+.info{display:flex;gap:16px;justify-content:center;font-size:14px;color:#666;margin:6px 0;flex-wrap:wrap}
+.info span{font-weight:bold;color:#7B1FA2}
+.diff-label{font-size:12px;font-weight:bold;padding:2px 8px;border-radius:8px;color:#fff}
+.diff-label.normal{background:#66BB6A}
+.diff-label.hard{background:#FF9800}
+.diff-label.oni{background:#EF5350}
+.target-color{width:120px;height:120px;border-radius:24px;margin:16px auto;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.3);box-shadow:0 6px 20px rgba(0,0,0,0.2);transition:transform 0.2s}
+.target-color.shake{animation:shake 0.4s ease}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}75%{transform:rotate(-3deg)}}
+.target-color.reverse{border:4px dashed #FFD740;box-shadow:0 0 20px rgba(255,215,64,0.4)}
+.color-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:300px;margin:12px auto}
+.cbtn{height:70px;border-radius:16px;border:4px solid transparent;cursor:pointer;-webkit-appearance:none;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.2);transition:all 0.1s;box-shadow:0 3px 8px rgba(0,0,0,0.15)}
+.cbtn:active{transform:scale(0.9)}
+.cbtn.correct{border-color:#FFD740;box-shadow:0 0 15px rgba(255,215,64,0.5)}
+.cbtn.wrong{border-color:#FF5252;opacity:0.5}
+.feedback{font-size:22px;font-weight:bold;min-height:30px;margin:8px 0}
+.timer-bar{width:100%;max-width:300px;height:8px;background:#eee;border-radius:4px;margin:6px auto;overflow:hidden}
+.timer-fill{height:100%;background:#9C27B0;border-radius:4px;transition:width 0.1s linear}
+.timer-fill.warn{background:#FF9800}
+.timer-fill.danger{background:#FF5252;animation:pulse 0.3s infinite alternate}
+@keyframes pulse{from{opacity:1}to{opacity:0.6}}
+.streak{font-size:16px;font-weight:bold;color:#FF6F00;min-height:24px;margin:4px 0}
+.result h2{font-size:26px;margin:10px 0}
+.result p{font-size:16px;color:#777;margin:5px 0}
+.round-type{font-size:12px;font-weight:bold;min-height:18px;margin:2px 0;color:#AB47BC}
+.round-type.reverse{color:#FF6F00;animation:blink 0.6s 3}
+@keyframes blink{50%{opacity:0.3}}
+
+/* Difficulty selector */
+.difficulty-select{display:flex;gap:8px;margin:10px 0}
+.diff-btn{padding:8px 16px;border-radius:12px;border:3px solid #ddd;background:#fff;font-size:14px;font-weight:bold;font-family:inherit;cursor:pointer;color:#666;transition:all 0.2s}
+.diff-btn:active{transform:scale(0.95)}
+.diff-btn.selected{border-color:#9C27B0;color:#9C27B0;background:#F3E5F5}
+.diff-btn[data-diff="hard"].selected{border-color:#FF9800;color:#FF9800;background:#FFF3E0}
+.diff-btn[data-diff="oni"].selected{border-color:#EF5350;color:#EF5350;background:#FFEBEE}
+
+/* Correct answer pop */
+.cbtn.pop{animation:popCorrect 0.3s ease}
+@keyframes popCorrect{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+
+body{align-items:flex-start!important}#g{height:auto!important;min-height:calc(100dvh - 110px);overflow:visible!important}.screen.active{position:relative!important;inset:auto!important;min-height:420px;width:100%}#playScreen{min-height:530px}.play-area{min-height:300px}canvas{max-width:100%;touch-action:none}
